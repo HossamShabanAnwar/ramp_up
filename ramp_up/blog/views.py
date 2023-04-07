@@ -18,10 +18,10 @@ class GenericBlogAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.
     def post(self, request):
         return self.create(request)
     
-    def put(self, request, id=None):
+    def put(self, request, id):
         return self.update(request, id)
     
-    def delete(self, request, id=None):
+    def delete(self, request, id):
         return self.destroy(request, id)
 
 
@@ -40,8 +40,19 @@ class GenericAuthorAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixin
     def post(self, request):
         return self.create(request)
     
-    def put(self, request, id=None):
+    def put(self, request, id):
         return self.update(request, id)
     
-    def delete(self, request, id=None):
+    def delete(self, request, id):
         return self.destroy(request, id)
+    
+
+
+
+class AuthorBlogsListAPIView(generics.ListAPIView):
+    serializer_class = BlogSerializer
+
+    def get_queryset(self):
+        author_id = self.kwargs['author_id']
+        queryset = Blog.objects.filter(author_id=author_id)
+        return queryset
