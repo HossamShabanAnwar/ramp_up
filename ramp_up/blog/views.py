@@ -2,6 +2,9 @@ from rest_framework import generics
 from rest_framework import mixins
 from .serializers import AuthorSerializer, BlogSerializer
 from .models import Author, Blog
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+
 
 
 class GenericBlogAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin
@@ -9,6 +12,8 @@ class GenericBlogAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.
     serializer_class = BlogSerializer
     queryset = Blog.objects.all()
     lookup_field = 'id'
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, id=None):
         if id:
@@ -31,6 +36,8 @@ class GenericAuthorAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixin
     serializer_class = AuthorSerializer
     queryset = Author.objects.all()
     lookup_field = 'id'
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, id=None):
         if id:
@@ -51,7 +58,9 @@ class GenericAuthorAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixin
 
 class AuthorBlogsListAPIView(generics.ListAPIView):
     serializer_class = BlogSerializer
-
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get_queryset(self):
         author_id = self.kwargs['author_id']
         queryset = Blog.objects.filter(author_id=author_id)
